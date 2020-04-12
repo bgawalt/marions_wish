@@ -1,3 +1,29 @@
+# MARION'S WISH, TEXT EDITION
+# Copy-pasted by bgawalt from PDF at marionswish.com
+#
+# Mild adjustments have been made to make the script machine-readable for the
+# purposes of this Twitter bot scheme:
+#
+# 1. Text messages have been collapsed from multiline to single line
+#
+# 2. Most multiline text messages in the PDF are merely performing word-wrap,
+#    so it's not a problem to collapse them to single lines here.  However,
+#    some of the text messages in the PDF involve *intentional* line breaks --
+#    Tim's list of TODOs for funeral arrangements, for example.  In cases where
+#    those line breaks are intentional, they are represented with the word 'QQ'.
+#
+# 3. The media messages now look like regular lines of dialogue, but instead
+#    start with the code word 'IMG', followed by a space, then a file name for
+#    the media object.
+#
+# 4. References to emoji have been replaced with the actual emoji.
+#
+# With affection,
+#   Brian Gawalt
+#   Apr 12, 2020
+#
+# BEGIN ORIGINAL PREAMBLE
+#
 # Copyright 2020 by Tim Heidecker, Mark Proksch, Gregg Turkington.
 #
 # All rights reserved under United States and Pan-American Copyright Laws.
@@ -43,16 +69,13 @@ Gregg: Mark, nice way to earn some quick pocket change! Moe was my favorite Stoo
 Gregg: Be sure and ask her where Moe is buried. Would love to find out.
 
 8:55 PM
-Gregg: Mark, Darrell has some nude photos of (presumably) Moe Howard that he would like
-authenticated. Could you show them to Marion and ask her if they are Moe or not?
+Gregg: Mark, Darrell has some nude photos of (presumably) Moe Howard that he would like authenticated. Could you show them to Marion and ask her if they are Moe or not?
 
 10:01 PM
 Mark: How does she even know about me?
 Gregg: Who cares! Can I send Aamos over to drop off the photos?
-Mark: Thanks Gregg, but I’d rather not see the photos. More interested in having a conversation
-with Marion.
-Gregg: You don’t have to look at Moe’s dick. Just show the pics to Marion and let her decide if
-it’s him or not.
+Mark: Thanks Gregg, but I’d rather not see the photos. More interested in having a conversation with Marion.
+Gregg: You don’t have to look at Moe’s dick. Just show the pics to Marion and let her decide if it’s him or not.
 
 10:06 PM
 Tim: Mark, Marion wants to Skype with you tomorrow at 8AM
@@ -87,8 +110,7 @@ Tim: Marion Howard is very interested to possibly sell the footage to an online 
 Tim: The Show will be called Breakfast with Mark and Marion.
 Tim: Awesome right?
 Mark: Yeah! Pretty neat.
-Tim: Mark get lots of sleep tonight. You have to get up early to make breakfast and be ready for
-the big show.
+Tim: Mark get lots of sleep tonight. You have to get up early to make breakfast and be ready for the big show.
 Mark: Okay. Looking forward to it. How will I contact her?
 Tim: Can you send 5-10 images of your body tonight so Mario can use for some titles?
 
@@ -116,8 +138,7 @@ Tim: Got it. Thanks. Saved my ass.
 Mark: IMG MARK_CHEST.png
 
 10:48 PM
-Tim: Unfortunately, we will have to postpone the breakfast show tomorrow. I have received word
-that Marion Howard just fell down some stairs and has suffered a concussion.
+Tim: Unfortunately, we will have to postpone the breakfast show tomorrow. I have received word that Marion Howard just fell down some stairs and has suffered a concussion.
 Mark: Oh no.
 Mark: That’s awful.
 Mark: Is she okay?!
@@ -130,8 +151,7 @@ Tim: Will you record a special message for her?
 Mark: When can we reschedule?
 Tim: Wishing her well?
 Mark: Of course.
-Gregg: Tim I heard that Marion died. Maybe just a rumor? Aamos heard it a couple of minutes
-ago from Tim. Not you - Tim Smith.
+Gregg: Tim I heard that Marion died. Maybe just a rumor? Aamos heard it a couple of minutes ago from Tim. Not you - Tim Smith.
 Mark: Ugh.
 Mark: I hope it’s not true.
 Mark: Really wanted to chat with her.
@@ -154,7 +174,7 @@ Mark: Huh?
 Tim: Mario said she is on life support?
 Mark: Jesus.
 Tim: Mario is asking what he should do.
-Omitted: Mark video - wishing Marion well.
+Mark: IMG MARK_VIDEO.mp4
 Tim: Mark what should Mario do?
 Tim: Mark Mario thinks he should take her off life support. What do you think he should do???
 Tim: He is asking you.
@@ -182,8 +202,7 @@ Tim: Mario is an oddball but Marion trusts him so much.
 Tim: It’s all good.
 Gregg: Mark you don’t need to be so aggressive right now. Show some maturity please.
 Gregg: Mark do you want to see the Curly autopsy pics?
-Tim: Mark this is confidential but Marion wants you and Mario to Manage Moe Howard’s
-intellectual property.
+Tim: Mark this is confidential but Marion wants you and Mario to Manage Moe Howard’s intellectual property.
 Tim: Not 3 stooges stuff but his personal photography.
 Mark: Okay Tim.
 Tim: Let’s pray she lives through the night. Mario will be by her side.
@@ -201,13 +220,10 @@ Gregg: I will withdraw these pics.
 
 April 4th 2020
 10:39 AM
-Gregg: Hey Mark any interest in visiting Curly Joe’s last residence later today with Darrell,
-Adam, Aamos, and Caruel? The guy who lives there now has agreed to let us in.
+Gregg: Hey Mark any interest in visiting Curly Joe’s last residence later today with Darrell, Adam, Aamos, and Caruel? The guy who lives there now has agreed to let us in.
 Mark: Why is Adam going?
-Gregg: He’s changed a lot Mark, he now wants to spend his time enjoying life with friends rather
-than fighting and provoking violence.
-Tim: Bad news. I won’t be able to make this. Dealing with funeral arrangements for Marion.
-Mark, has Mario reached out?
+Gregg: He’s changed a lot Mark, he now wants to spend his time enjoying life with friends rather than fighting and provoking violence.
+Tim: Bad news. I won’t be able to make this. Dealing with funeral arrangements for Marion. QQ Mark, has Mario reached out?
 Gregg: Tim, can you do both?
 Gregg: This is our only chance to get inside Curly Joe’s old house.
 Tim: No but take videos.
@@ -234,7 +250,7 @@ Tim: Mark google stooge family funeral planning and work something up.
 Tim: Should take you no time at all.
 Mark: Nothing came up.
 Tim: Call funeral parlors and get into it man. Do you need me to wipe your ass too?
-Mark Why do I have to do this?! Why doesn’t Mario?
+Mark: Why do I have to do this?! Why doesn’t Mario?
 Tim: I have no idea.
 Tim: Marion is up and about!
 Tim: Can you do the skipper with her tomorrow?
@@ -346,8 +362,7 @@ Tim: I spoke to Mario.
 Tim: Marion.
 Tim: She is fine.
 Tim: That was at 1:15 today.
-Gregg: Tim Smith just texted a grim bit of news from Marion’s caretaker Ava. Marion passed
-away at 1:48 pm.
+Gregg: Tim Smith just texted a grim bit of news from Marion’s caretaker Ava. Marion passed away at 1:48 pm.
 Gregg: I don’t trust Tim but I do trust Ava.
 Gregg: Just heard from Ava via Tim Smith. Marion is fine!
 Gregg: It was Mario who passed away unexpectedly.
@@ -361,14 +376,12 @@ Tim: She’s recovering.
 Tim: Mark she wants to give you some Moe Memorabilia.
 Gregg: Any more nudes?
 Tim: I don’t have information on that.
-
 Tim: Mark marion passed away this evening from an unrelated illness.
 Tim: Tomorrow’s session is cancelled.
 Tim: She was the last living relative of Mow Howard
 Tim: Moe Haoward
 Gregg: That’s awful. Marion and Marion are now together on Heaven, Mark.
-Tim: Yes. Mark Mario was going to handle marions funeral but now he is gone. His son Allan is
-handling that now
+Tim: Yes. Mark Mario was going to handle marions funeral but now he is gone. His son Allan is handling that now
 Tim: Is son is handling his funeral. marions
 Tim: Sorry Mario’s
 Tim: So can you help arrange Mario’s funeral?
@@ -379,15 +392,12 @@ Tim: Tim isn’t to be trusted on this
 Tim: Mark can you arrange funerals.
 Tim: Sorry, just Funeral for Marion
 Tim: Marion’s son is handling his.
-Gregg: I just don’t know what to think. Marion and Marion were very close Mark. Tim Smith
-was a witness to that.
+Gregg: I just don’t know what to think. Marion and Marion were very close Mark. Tim Smith was a witness to that.
 Gregg: Marion wanted to be buried next to Marion.
 Gregg: Marlon.
-Gregg: I do believe the real Marion is still alive and mourning the loss of Marlo in Juneau
-Alaska.
+Gregg: I do believe the real Marion is still alive and mourning the loss of Marlo in Juneau Alaska.
 Gregg: Mario is alive, morning Marion
-Gregg: Mark, Marion wanted you to have this stuff, please pick up
-by noon tomorrow or you will be charged a storage fee
+Gregg: Mark, Marion wanted you to have this stuff, please pick up by noon tomorrow or you will be charged a storage fee
 Gregg: IMG CABINET_FOAM.png
 
 10:41 PM
@@ -432,8 +442,7 @@ Mark: Okay.
 Gregg: Mario May be alive, Mark.
 Gregg: The Mario May be a fake.
 Mark: Huh?
-Gregg: Marlo at Forest Lawn can check and see if “Mario” has a Moe tattoo to the right of his
-balls, on his leg. If not--it’s not Mario.
+Gregg: Marlo at Forest Lawn can check and see if “Mario” has a Moe tattoo to the right of his balls, on his leg. If not--it’s not Mario.
 Gregg: Call Marlo and ask her.
 Mark: I’m not asking that.
 Gregg: I trust you Tim that you have the correct information about Marion’s passing.
@@ -445,7 +454,7 @@ Mark: Thread
 Mark: ?
 Mark: Smith or Heidecker?
 Gregg: Heidecker.
-Gregg; I can add Tim Smith if you like. He could clear this all up.
+Gregg: I can add Tim Smith if you like. He could clear this all up.
 Tim: Don’t, he is one of the jerky boys!
 Gregg: Tim is very jealous of Tim.
 Mark: Please don’t.
@@ -458,11 +467,7 @@ Mark: I’ll call Forest Lawn about Mario and Marion.
 Gregg: Mario is not Mario.
 Mark: ?
 Gregg: It’s an imposter, and the real Mario is in Alaska.
-Tim: Mark you need to do 5 things tomorrow:
-Contact Mario at cemetery.
-Arrange for ballbesrers.
-Get a video of Moe’s career.
-Send out a statement to the stooge community.
+Tim: Mark you need to do 5 things tomorrow: QQ Contact Mario at cemetery. QQ Arrange for ballbesrers. QQ Get a video of Moe’s career. QQ Send out a statement to the stooge community.
 Gregg: This fake Mario stole Mario’s identit
 Mark: ?
 Tim: Also alert the Fine family.
@@ -493,8 +498,7 @@ Tim: I thought it would be a nice gesture.
 Tim: Mark Pray for Marions family tonight.
 Mark: K
 Gregg: Marion’s family all Died. The Howard’s.
-Gregg: Mark, Mario (the real Mario) wants to meet with you when he returns from Alaska to
-share memories of his beloved Marion. You will love these stories!
+Gregg: Mark, Mario (the real Mario) wants to meet with you when he returns from Alaska to share memories of his beloved Marion. You will love these stories!
 Gregg: The fake Mario’s ashes should be flushed down the toilet, guys. What a scammer.
 Mark: ???
 Mark: ???
