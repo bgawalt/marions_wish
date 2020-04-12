@@ -1,5 +1,7 @@
 # Copyright 2020 by Tim Heidecker, Mark Proksch, Gregg Turkington.
+#
 # All rights reserved under United States and Pan-American Copyright Laws.
+#
 # No part of this book may be reproduced without permission in writing from the publisher.
 # Theaters, schools, and/or student organizations must contact publishers for information regarding
 # licensing fees for public and theatrical performances prior to theatrical announcements.
@@ -7,6 +9,7 @@
 # with potentially serious legal consequences for the infringer.
 #
 # Foreword
+#
 # For the past 7 years or so, Gregg, Mark and I have had a text thread going that has brought me
 # more laughter and joy than most anything other form of media I can recall. This thread has gone
 # dormant for days, but never weeks. It’s always simmering, and it’s always the same joke: a sick,
@@ -22,6 +25,7 @@
 #
 # Please note: This is not “On Cinema Gregg, Tim or Mark.”
 # I don’t know who these assholes are! All The Best!
+#
 # Tim Heidecker
 # April 8th, 2020
 
