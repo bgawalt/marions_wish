@@ -1,11 +1,16 @@
 """Twitter bots reciting "Marion's Wish"
 
-TODO: Add usage
+Usage:
+    python marions_wish.py marions_wish_script.txt
 """
 
+import pytz
 import sys
+import time
 
-from datetime import timedelta
+from datetime import datetime as dt_datetime
+from datetime import time as dt_time
+from datetime import timedelta as dt_timedelta
 from enum import Enum
 from typing import Text, Tuple
 
@@ -90,13 +95,69 @@ class TextMsg(object):
         return TextMsg(id_=id_, sender=sender, contents=contents, is_img=is_img)
 
 
+class TimeKeeper(object):
+
+    def __init__(self, restrict: bool = True):
+        self._tz = pytz.timezone('America/Los_Angeles')
+        now = dt_datetime.now(self._tz)
+        if restrict and now.hour >= 19:
+            raise RuntimeError("Can't run this job after 7 PM (Pacific)!!")
+        self._day_0 = now.date()
+        self._day_1 = self._day_0 + dt_timedelta(days=1)
+        self._timelock = dt_datetime.combine(self._day_0, dt_time.min)
+        print(self._day_0)
+        print(self._day_1)
+        print(self._timelock)
+
+    def update_lock(self, line: Text) -> bool:
+        """Tries to parse line and update lock, returns True iff success."""
+        if line.startswith('Day 0, '):
+            day = self._day_0
+        elif line.startswith('Day 1, '):
+            day = self._day_1
+        else:
+            return False
+        try:
+            hour, min_and_period = line[7:].strip().split(':', maxsplit=1)
+            min, period = min_and_period.split(' ', maxsplit=1)
+            if period == 'AM':
+                hour = int(hour)
+            elif period == 'PM':
+                hour = int(hour) + 12
+            else:
+                return False
+            min = int(min)
+            time = dt_time(hour=hour, minute=min, tzinfo=self._tz)
+            self._timelock = dt_datetime.combine(day, time)
+        except:
+            return False
+        return True
+
+    # HMMMM... maybe i don't want this piece....
+    def wait_for_lock(self, actually_sleep: bool = True):
+        now = dt_datetime.now(self._tz)
+        while now < self._timelock:
+            seconds_to_sleep = (self._timelock - now).total_seconds()
+            if actually_sleep:
+                time.sleep((self._timelock - now).total_seconds())
+                now = dt_datetime.now(self._tz)
+            else:
+                print('Fake-sleeping for %d seconds' % (seconds_to_sleep,))
+                now = self._timelock
+
+
 def main(argv):
     # Positional arguments only:
     script_filename = argv[1]
     next_id = 0
+    tk = TimeKeeper(restrict=False)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
     for line_num, line in enumerate(lines):
+        if tk.update_lock(line):
+            # ... maybe its better to parse all at once then post in real time
+            tk.wait_for_lock(False)
+            continue
         text_msg = TextMsg.from_line(line, next_id)
         if text_msg.sender.is_character():
             next_id += 1
