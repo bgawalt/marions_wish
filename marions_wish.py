@@ -15,6 +15,9 @@ from enum import Enum
 from typing import Text, Tuple
 
 
+_CALI_TZ = pytz.timezone('US/Pacific')
+
+
 # TODO: Naming scheme here collides with typing.Text, rename?
 class Texter(Enum):
     """A person sending a text message."""
@@ -107,7 +110,6 @@ class TimeKeeper(object):
     """Track the time texts take place in the script."""
 
     def __init__(self, restrict: bool = True):
-        self._tz = pytz.timezone('US/Pacific')
         now = dt_datetime.now()
         if restrict and now.hour >= 19:
             raise RuntimeError("Can't run this job after 7 PM (Pacific)!!")
@@ -138,24 +140,34 @@ class TimeKeeper(object):
                 return False
             min = int(min)
             time = dt_time(hour=hour, minute=min)
-            self._timelock = self._tz.localize(dt_datetime.combine(day, time))
+            self._timelock = _CALI_TZ.localize(dt_datetime.combine(day, time))
         except Exception as e:
             print(e, line[:25])
             return False
         return True
 
-    # HMMMM... maybe i don't want this piece....
-    def wait_for_lock(self, actually_sleep: bool = True):
-        now = self._tz.localize(dt_datetime.now())
-        while now < self._timelock:
-            seconds_to_sleep = (self._timelock - now).total_seconds()
-            if actually_sleep:
-                time.sleep((self._timelock - now).total_seconds())
-                now = self._tz.localize(dt_datetime.now())
+
+class TweetEmitter(object):
+    """Class that handles actually posting to Twitter."""
+
+    def __init__(self, test_mode: bool = False):
+        pass
+
+    def _wait(self, msg: TextMsg, test_mode: bool) -> None:
+        now = _CALI_TZ.localize(dt_datetime.now())
+        while now < msg.timelock:
+            if not test_mode:
+                time.sleep((msg.timelock - now).total_seconds())
+                now = _CALI_TZ.localize(dt_datetime.now())
             else:
-                print('Fake-sleeping for %d seconds' % (seconds_to_sleep,))
+                print('Fake-sleeping for %d seconds' %
+                      ((msg.timelock - now).total_seconds(),))
                 time.sleep(3)
-                now = self._timelock
+                now = msg.timelock
+
+    def post(self, msg: TextMsg, test_timing: bool) -> None:
+        self._wait(msg, test_timing)
+        print(msg.sender, msg.contents[:50])
 
 
 def main(argv):
@@ -163,6 +175,7 @@ def main(argv):
     script_filename = argv[1]
     next_id = 0
     tk = TimeKeeper(restrict=False)
+    emitter = TweetEmitter()
     print('Initial timelock value:', tk.timelock)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
@@ -179,12 +192,9 @@ def main(argv):
         if text_msg.sender == Texter.UNKNOWN:
             print('UNKNOWN at line', line_num + 1, ":",
                   line[:25].strip(), "...")
-    lengths = [len(msg.contents) for msg in msgs]
-    print(max(lengths), min(lengths))
 
     for msg in msgs:
-        if len(msg.contents) > 210:
-            print(msg.contents[:100])
+        emitter.post(msg, test_timing=False)
 
 
 if __name__ == "__main__":
