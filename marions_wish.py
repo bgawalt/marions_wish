@@ -179,10 +179,12 @@ def main(argv):
         if text_msg.sender == Texter.UNKNOWN:
             print('UNKNOWN at line', line_num + 1, ":",
                   line[:25].strip(), "...")
-    for msg in msgs[:10]:
-        print(msg.sender, msg.timelock, msg.contents[:25])
-    for msg in msgs[-10:]:
-        print(msg.timelock, msg.sender, msg.contents[:25])
+    lengths = [len(msg.contents) for msg in msgs]
+    print(max(lengths), min(lengths))
+
+    for msg in msgs:
+        if len(msg.contents) > 210:
+            print(msg.contents[:100])
 
 
 if __name__ == "__main__":

@@ -20,6 +20,9 @@
 #
 # 5. Time stamps are now prefaced with 'Day 0' or 'Day 1'
 #
+# 6. One particularly long message from Gregg has been split into two, to fit
+#    within the character limits for a tweet.
+#
 # With affection,
 #   Brian Gawalt
 #   Apr 12, 2020
@@ -387,7 +390,8 @@ Tim: Yes. Mark Mario was going to handle marions funeral but now he is gone. His
 Tim: Is son is handling his funeral. marions
 Tim: Sorry Mario’s
 Tim: So can you help arrange Mario’s funeral?
-Gregg: Tim Smith tells me that the Mario who was in marion’s life was an imposter! He was trying to pilfer her Moe souvenirs. The REAL Mario has been in Alaska for 4 weeks working on a huge land sale. Tim heard from him today. He is very upset someone impersonated him. Honestly I was a little skeptical because the real Mario is not as hefty as the one who died.
+Gregg: Tim Smith tells me that the Mario who was in marion’s life was an imposter! He was trying to pilfer her Moe souvenirs. The REAL Mario has been in Alaska for 4 weeks working on a huge land sale.
+Gregg: Tim heard from him today. He is very upset someone impersonated him. Honestly I was a little skeptical because the real Mario is not as hefty as the one who died.
 Tim: Marion has put on weight recently.
 Gregg: Sadly Marion was too mentally ill to be able to communicate to anyone the scam! But she must’ve known.
 Tim: Tim isn’t to be trusted on this
