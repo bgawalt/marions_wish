@@ -52,7 +52,8 @@ class Texter(Enum):
 class TextMsg(object):
     """A text message sent to the thread."""
 
-    def __init__(self, id_: int, sender: Texter, contents: Text, is_img: bool):
+    def __init__(self, id_: int, sender: Texter, contents: Text, is_img: bool,
+                 timelock: dt_datetime):
         """A single message to be posted to Twitter.
 
         Args:
@@ -60,11 +61,13 @@ class TextMsg(object):
             texter: Sender of the message.
             contents: Either the text of the message, or an image filename
             is_img: Whether this is image message (or else just text)
+            timelock: Point in time after which it becomes OK to tweet this
         """
         self._id = id_
         self._sender = sender
-        self._contents = contents
+        self._contents = contents.strip()
         self._is_img = is_img
+        self._timelock = timelock
 
     @property
     def id(self) -> int:
@@ -82,8 +85,12 @@ class TextMsg(object):
     def is_img(self) -> bool:
         return self._is_img
 
+    @property
+    def timelock(self) -> dt_datetime:
+        return self._timelock
+
     @staticmethod
-    def from_line(line: Text, next_id: int) -> 'TextMsg':
+    def from_line(line: Text, next_id: int, timelock: dt_datetime) -> 'TextMsg':
         """Parse a line of the script into a text message."""
         sender, contents = Texter.from_line(line)
         id_ = next_id if sender.is_character() else -1
@@ -92,22 +99,25 @@ class TextMsg(object):
             contents = contents[4:]
         else:
             is_img = False
-        return TextMsg(id_=id_, sender=sender, contents=contents, is_img=is_img)
+        return TextMsg(id_=id_, sender=sender, contents=contents, is_img=is_img,
+                       timelock=timelock)
 
 
 class TimeKeeper(object):
+    """Track the time texts take place in the script."""
 
     def __init__(self, restrict: bool = True):
-        self._tz = pytz.timezone('America/Los_Angeles')
-        now = dt_datetime.now(self._tz)
+        self._tz = pytz.timezone('US/Pacific')
+        now = dt_datetime.now()
         if restrict and now.hour >= 19:
             raise RuntimeError("Can't run this job after 7 PM (Pacific)!!")
         self._day_0 = now.date()
         self._day_1 = self._day_0 + dt_timedelta(days=1)
         self._timelock = dt_datetime.combine(self._day_0, dt_time.min)
-        print(self._day_0)
-        print(self._day_1)
-        print(self._timelock)
+
+    @property
+    def timelock(self) -> dt_datetime:
+        return self._timelock
 
     def update_lock(self, line: Text) -> bool:
         """Tries to parse line and update lock, returns True iff success."""
@@ -127,22 +137,24 @@ class TimeKeeper(object):
             else:
                 return False
             min = int(min)
-            time = dt_time(hour=hour, minute=min, tzinfo=self._tz)
-            self._timelock = dt_datetime.combine(day, time)
-        except:
+            time = dt_time(hour=hour, minute=min)
+            self._timelock = self._tz.localize(dt_datetime.combine(day, time))
+        except Exception as e:
+            print(e, line[:25])
             return False
         return True
 
     # HMMMM... maybe i don't want this piece....
     def wait_for_lock(self, actually_sleep: bool = True):
-        now = dt_datetime.now(self._tz)
+        now = self._tz.localize(dt_datetime.now())
         while now < self._timelock:
             seconds_to_sleep = (self._timelock - now).total_seconds()
             if actually_sleep:
                 time.sleep((self._timelock - now).total_seconds())
-                now = dt_datetime.now(self._tz)
+                now = self._tz.localize(dt_datetime.now())
             else:
                 print('Fake-sleeping for %d seconds' % (seconds_to_sleep,))
+                time.sleep(3)
                 now = self._timelock
 
 
@@ -151,19 +163,26 @@ def main(argv):
     script_filename = argv[1]
     next_id = 0
     tk = TimeKeeper(restrict=False)
+    print('Initial timelock value:', tk.timelock)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
+    msgs = []
     for line_num, line in enumerate(lines):
         if tk.update_lock(line):
-            # ... maybe its better to parse all at once then post in real time
-            tk.wait_for_lock(False)
+            print('New timelock:', tk.timelock)
+            # No need to try parsing this line as a message, it was timing info
             continue
-        text_msg = TextMsg.from_line(line, next_id)
+        text_msg = TextMsg.from_line(line, next_id, tk.timelock)
         if text_msg.sender.is_character():
             next_id += 1
+            msgs.append(text_msg)
         if text_msg.sender == Texter.UNKNOWN:
             print('UNKNOWN at line', line_num + 1, ":",
                   line[:25].strip(), "...")
+    for msg in msgs[:10]:
+        print(msg.sender, msg.timelock, msg.contents[:25])
+    for msg in msgs[-10:]:
+        print(msg.timelock, msg.sender, msg.contents[:25])
 
 
 if __name__ == "__main__":
