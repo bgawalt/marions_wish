@@ -1,7 +1,9 @@
 """Twitter bots reciting "Marion's Wish"
 
+TODO: Describe config file
+
 Usage:
-    python marions_wish.py marions_wish_script.txt
+    python marions_wish.py config_file.txt
 """
 
 import pytz
@@ -12,10 +14,25 @@ from datetime import datetime as dt_datetime
 from datetime import time as dt_time
 from datetime import timedelta as dt_timedelta
 from enum import Enum
-from typing import Text, Tuple
+from requests_oauthlib import OAuth1
+from typing import Dict, Text, Tuple
 
 
 _CALI_TZ = pytz.timezone('US/Pacific')
+
+
+def parse_config(config_filename: Text) -> Dict[Text, Text]:
+    with open(config_filename, 'rt') as infile:
+        lines = infile.readlines()
+    out = {}
+    for line in lines:
+        if line.startswith('#'):
+            continue
+        spline = line.split(' = ', maxsplit=1)
+        if len(spline) != 2:
+            raise ValueError('Invalid config line! ' + line.strip())
+        out[spline[0]] = spline[1].strip()
+    return out
 
 
 # TODO: Naming scheme here collides with typing.Text, rename?
@@ -150,7 +167,7 @@ class TimeKeeper(object):
 class TweetEmitter(object):
     """Class that handles actually posting to Twitter."""
 
-    def __init__(self, test_mode: bool = False):
+    def __init__(self, config: Dict[Text, Text], test_mode: bool = False):
         self._test_mode = test_mode
         # How long to wait before letting the same account tweet again.
         self._same_sender_delta = dt_timedelta(seconds=(6 if test_mode else 60))
@@ -165,6 +182,20 @@ class TweetEmitter(object):
             Texter.TIM: now,
             Texter.GREGG: now,
             Texter.MARK: now
+        }
+
+        ckey = config['CONSUMER_KEY']
+        csec = config['CONSUMER_SECRET']
+        self._sender_oauths = {
+            Texter.TIM: OAuth1(ckey, client_secret=csec,
+                               resource_owner_key=config['TIM_KEY'],
+                               resource_owner_secret=config['TIM_SECRET']),
+            Texter.GREGG: OAuth1(ckey, client_secret=csec,
+                                 resource_owner_key=config['GREGG_KEY'],
+                                 resource_owner_secret=config['GREGG_SECRET']),
+            Texter.MARK: OAuth1(ckey, client_secret=csec,
+                                resource_owner_key=config['MARK_KEY'],
+                                resource_owner_secret=config['MARK_SECRET'])
         }
 
     def _wait(self, msg: TextMsg) -> None:
@@ -195,11 +226,12 @@ class TweetEmitter(object):
 
 
 def main(argv):
-    # Positional arguments only:
-    script_filename = argv[1]
+    # One positional argument: The config file, which specifies all else.
+    config = parse_config(argv[1])
+    script_filename = config['SCRIPT_FILENAME']
     next_id = 0
     tk = TimeKeeper(restrict=False)
-    emitter = TweetEmitter(test_mode=True)
+    emitter = TweetEmitter(config, test_mode=True)
     print('Initial timelock value:', tk.timelock)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
