@@ -23,6 +23,9 @@
 # 6. One particularly long message from Gregg has been split into two, to fit
 #    within the character limits for a tweet.
 #
+# 7. The initial text message now also has Gregg & Mark's twitter handles, to
+#    try to make sure the reply-threading works.
+#
 # With affection,
 #   Brian Gawalt
 #   Apr 12, 2020
@@ -62,7 +65,7 @@
 
 # April 3rd 2020
 Day 0, 7:52 PM
-Tim: Hey mark! Marion Howard (granddaughter of Moe Howard) wants to Skype with you.
+Tim: @gregg_mwish @mark_mwish Hey mark! Marion Howard (granddaughter of Moe Howard) wants to Skype with you.
 Tim: She is 57 and has a mental illness FYI
 Tim: She wants to see your shiny bald head on her computer.
 Tim: What say you?
@@ -404,7 +407,7 @@ Gregg: Marlon.
 Gregg: I do believe the real Marion is still alive and mourning the loss of Marlo in Juneau Alaska.
 Gregg: Mario is alive, morning Marion
 Gregg: Mark, Marion wanted you to have this stuff, please pick up by noon tomorrow or you will be charged a storage fee
-Gregg: IMG CABINET_FOAM.png
+Gregg: IMG FILE_CABINET.png
 
 Day 1, 10:41 PM
 Tim: Mark the funeral parlor is getting impatient with you. Please call Marlo at Forest Lawn
