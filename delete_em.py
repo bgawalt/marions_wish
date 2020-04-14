@@ -1,4 +1,13 @@
-"""TODO Describe, usage"""
+"""Delete test tweets.
+
+Stock DELETE_ME a list of Tuple[Texter, Text] where the Text element is an ID
+of a tweet (owned by the Texter) you want deleted.
+
+Use the same config file as marions_wish.py
+
+Usage:
+    python delete_em.py config.txt
+"""
 
 import requests
 import sys
@@ -31,7 +40,6 @@ def main(argv):
             auth=oauths[sender])
         print('    deleted', resp.json().get('id_str', None))
         time.sleep(10)
-
 
 
 if __name__ == "__main__":
