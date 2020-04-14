@@ -74,6 +74,22 @@ class Texter(Enum):
         return (sender, spline[1])
 
 
+def create_sender_oauths(config: Dict[Text, Text]) -> Dict[Texter, OAuth1]:
+    ckey = config['CONSUMER_KEY']
+    csec = config['CONSUMER_SECRET']
+    return {
+        Texter.TIM: OAuth1(ckey, client_secret=csec,
+                           resource_owner_key=config['TIM_KEY'],
+                           resource_owner_secret=config['TIM_SECRET']),
+        Texter.GREGG: OAuth1(ckey, client_secret=csec,
+                             resource_owner_key=config['GREGG_KEY'],
+                             resource_owner_secret=config['GREGG_SECRET']),
+        Texter.MARK: OAuth1(ckey, client_secret=csec,
+                            resource_owner_key=config['MARK_KEY'],
+                            resource_owner_secret=config['MARK_SECRET'])
+    }
+
+
 # TODO: Naming scheme here collides with typing.Text, rename?
 class TextMsg(object):
     """A text message sent to the thread."""
@@ -191,20 +207,7 @@ class TweetEmitter(object):
             Texter.GREGG: now,
             Texter.MARK: now
         }
-
-        ckey = config['CONSUMER_KEY']
-        csec = config['CONSUMER_SECRET']
-        self._sender_oauths = {
-            Texter.TIM: OAuth1(ckey, client_secret=csec,
-                               resource_owner_key=config['TIM_KEY'],
-                               resource_owner_secret=config['TIM_SECRET']),
-            Texter.GREGG: OAuth1(ckey, client_secret=csec,
-                                 resource_owner_key=config['GREGG_KEY'],
-                                 resource_owner_secret=config['GREGG_SECRET']),
-            Texter.MARK: OAuth1(ckey, client_secret=csec,
-                                resource_owner_key=config['MARK_KEY'],
-                                resource_owner_secret=config['MARK_SECRET'])
-        }
+        self._sender_oauths = create_sender_oauths(config)
 
     def _wait(self, msg: TextMsg) -> None:
         now = _CALI_TZ.localize(dt_datetime.now())
