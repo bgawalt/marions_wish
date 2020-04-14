@@ -30,6 +30,8 @@ def parse_config(config_filename: Text) -> Dict[Text, Text]:
         lines = infile.readlines()
     out = {}
     for line in lines:
+        if not line.strip():
+            continue
         if line.startswith('#'):
             continue
         spline = line.split(' = ', maxsplit=1)
@@ -247,7 +249,10 @@ class TweetEmitter(object):
             print('Successfully posted ', msg.sender, self._prev_tweet_id)
 
         # TODO: Handle media tweets
-        send_tweet(msg, None)
+        if not self._test_mode:
+            send_tweet(msg, None)
+        else:
+            print(msg.sender, msg.contents)
 
 
 def main(argv):
