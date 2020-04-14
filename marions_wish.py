@@ -7,6 +7,7 @@ Usage:
 """
 
 import pytz
+import requests
 import sys
 import time
 
@@ -15,10 +16,13 @@ from datetime import time as dt_time
 from datetime import timedelta as dt_timedelta
 from enum import Enum
 from requests_oauthlib import OAuth1
-from typing import Dict, Text, Tuple
+from typing import Dict, Optional, Text, Tuple
 
 
 _CALI_TZ = pytz.timezone('US/Pacific')
+
+MEDIA_ENDPOINT_URL = 'https://upload.twitter.com/1.1/media/upload.json'
+POST_TWEET_URL = 'https://api.twitter.com/1.1/statuses/update.json'
 
 
 def parse_config(config_filename: Text) -> Dict[Text, Text]:
@@ -170,14 +174,15 @@ class TweetEmitter(object):
     def __init__(self, config: Dict[Text, Text], test_mode: bool = False):
         self._test_mode = test_mode
         # How long to wait before letting the same account tweet again.
-        self._same_sender_delta = dt_timedelta(seconds=(6 if test_mode else 60))
+        self._same_sender_delta = dt_timedelta(seconds=(6 if test_mode else 40))
         # How logn to wait after posting no matter who's posting next.
-        self._post_delay_sec = 3 if test_mode else 30
+        self._post_delay_sec = 3 if test_mode else 20
 
         # Last tweet added to the thread
         self._prev_tweet_id = None
 
         now = _CALI_TZ.localize(dt_datetime.now())
+        # TODO: Ditch time locks, just sleep based on previous sender v current
         self._sender_timelocks = {
             Texter.TIM: now,
             Texter.GREGG: now,
@@ -217,12 +222,33 @@ class TweetEmitter(object):
 
     def post(self, msg: TextMsg) -> None:
         self._wait(msg)
-        print('POST!! ', msg.sender, msg.contents[:50])
+        print('POSTing ', msg.sender, msg.contents[:50])
+
+        # Apply timelock:
         self._sender_timelocks[msg.sender] = (
             _CALI_TZ.localize(dt_datetime.now()) + self._same_sender_delta)
         print('  new timelock for', msg.sender, ':',
               self._sender_timelocks[msg.sender])
         time.sleep(self._post_delay_sec)
+
+        def send_tweet(text: Optional[Text], media_id: Optional[Text]) -> Text:
+            if text is None and media_id is None:
+                raise ValueError('Must supply text or media_id')
+            request_data = {}
+            if self._prev_tweet_id != None:
+                request_data['in_reply_to_status_id'] = self._prev_tweet_id
+                request_data['auto_populate_reply_metadata'] = True
+                request_data['status'] = msg.contents
+            else:
+                # TODO: Consider re-populating twitter @mentions
+                request_data['status'] = msg.contents
+            req = requests.post(url=POST_TWEET_URL, data=request_data,
+                                auth=self._sender_oauths[msg.sender])
+            self._prev_tweet_id = req.json().get('id_str', None)
+            print('Successfully posted ', self._prev_tweet_id)
+
+        # TODO: Handle media tweets
+        send_tweet(msg, None)
 
 
 def main(argv):
