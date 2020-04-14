@@ -171,12 +171,13 @@ class TimeKeeper(object):
 class TweetEmitter(object):
     """Class that handles actually posting to Twitter."""
 
-    def __init__(self, config: Dict[Text, Text], test_mode: bool = False):
-        self._test_mode = test_mode
+    def __init__(self, config: Dict[Text, Text]):
+        self._test_mode = config['TEST_MODE'] == 'True'
+        print('test mode', self._test_mode)
         # How long to wait before letting the same account tweet again.
-        self._same_sender_delta = dt_timedelta(seconds=(6 if test_mode else 40))
+        self._same_sender_delta = dt_timedelta(seconds=15)
         # How logn to wait after posting no matter who's posting next.
-        self._post_delay_sec = 3 if test_mode else 20
+        self._post_delay_sec = 3 if self._test_mode else 20
 
         # Last tweet added to the thread
         self._prev_tweet_id = None
@@ -212,6 +213,7 @@ class TweetEmitter(object):
         now = _CALI_TZ.localize(dt_datetime.now())
         while now < msg.timelock:
             if not self._test_mode:
+                print('Sleep till', msg.timelock)
                 time.sleep((msg.timelock - now).total_seconds())
                 now = _CALI_TZ.localize(dt_datetime.now())
             else:
@@ -222,13 +224,10 @@ class TweetEmitter(object):
 
     def post(self, msg: TextMsg) -> None:
         self._wait(msg)
-        print('POSTing ', msg.sender, msg.contents[:50])
 
         # Apply timelock:
         self._sender_timelocks[msg.sender] = (
             _CALI_TZ.localize(dt_datetime.now()) + self._same_sender_delta)
-        print('  new timelock for', msg.sender, ':',
-              self._sender_timelocks[msg.sender])
         time.sleep(self._post_delay_sec)
 
         def send_tweet(text: Optional[Text], media_id: Optional[Text]) -> Text:
@@ -245,7 +244,7 @@ class TweetEmitter(object):
             req = requests.post(url=POST_TWEET_URL, data=request_data,
                                 auth=self._sender_oauths[msg.sender])
             self._prev_tweet_id = req.json().get('id_str', None)
-            print('Successfully posted ', self._prev_tweet_id)
+            print('Successfully posted ', msg.sender, self._prev_tweet_id)
 
         # TODO: Handle media tweets
         send_tweet(msg, None)
@@ -257,7 +256,7 @@ def main(argv):
     script_filename = config['SCRIPT_FILENAME']
     next_id = 0
     tk = TimeKeeper(restrict=False)
-    emitter = TweetEmitter(config, test_mode=True)
+    emitter = TweetEmitter(config)
     print('Initial timelock value:', tk.timelock)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
