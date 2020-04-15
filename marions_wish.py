@@ -1,6 +1,6 @@
 """Twitter bots reciting "Marion's Wish"
 
-TODO: Describe config file
+See README.md for details on config file and text-file-script format.
 
 Usage:
     python marions_wish.py config_file.txt
@@ -254,8 +254,14 @@ def main(argv):
     config = parse_config(argv[1])
     script_filename = config['SCRIPT_FILENAME']
     next_id = 0
+
+    # TimeKeeper will track timelock values encountered in the script, and
+    # apply them to dialogues found in the block following:
     tk = TimeKeeper(restrict=False)
+    # TweetEmitter will handle actually respecting the timelocks and pushing
+    # the tweets to Twitter:
     emitter = TweetEmitter(config)
+    
     print('Initial timelock value:', tk.timelock)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()

@@ -15,6 +15,35 @@ This repo includes a text-file version of that script, whose special format is
 parsed into instructions on which account should tweet, or whether a long pause
 is in order.
 
+## Tweetable "Marion's Wish" Script
+
+The text file of the script parses lines of the following format:
+
+*  **Lines that start with `'#'`:** These lines are ignored.  Comments!
+*  **Blank lines:** Also ignored
+*  **Lines of the format `'Day K, HH:MM XM'`:** Used as instructions on when the
+    next block of dialogue should begin ("timelocks"):
+      * `K`: Either 0 or 1.  "Marion's Wish" plays out over two days, so this
+          encodes whether the dialogue is on the first or second day
+      * `HH`: One or two digits for the hour of the day
+      * `MM`: Two digits for the minute of the day
+      * `XM`: Either AM or PM
+*  **Lines that start with `'Tim: '`, `'Gregg: '`, or `'Mark: '`:** These are
+    parsed as the actual lines of dialogue to send out.
+
+Any other line encountered will raise a `ValueError`.  The two scripts in this
+repo -- `marions_wish.txt` and `test_script.txt` -- both parse just fine.
+
+The Python code parses the script, turning each line of dialogue into a
+sender ID and message contents, housed by the class `TextMsg`.  At the same
+time, a `TimeKeeper` object will track when timelock lines appear, then make
+sure that each `TextMsg` is constructed with the appropriate timelock value
+(always in California's time zone).
+
+The full result should look a lot like a group chat thread that grows over the
+course of 51 hours.  I have no idea if that's a reasonable ask of a program, to
+stay alive but mostly sleeping for that long.
+
 ## Config file
 
 At this point, I'm finally convinced that my *next* bot needs to use JSON for
@@ -49,14 +78,18 @@ CONSUMER_SECRET = YourPostingAppsSecretA834239
 TIM_KEY = KeyForTimAccount01029283
 TIM_SECRET = SecretForTimAccount
 
-GREGG_KEY = AndSoOn
-GREGG_SECRET = AndSoForth
+GREGG_KEY = AndSoOn823782374
+GREGG_SECRET = AndSoForth3434534
 
-MARK_KEY = MarkTooHeresHisKey
+MARK_KEY = MarkTooHeresHisKeyXYAYSDas
 MARK_SECRET = AndMarksSecret92334yfsdhds
 ```
 
 ## Dependencies
+
+This code runs in Python 3.7 (.1 on my server, .3 on my laptop).
+
+I installed the following modules with pip into a virtual environment:
 
 ```shell
 pip install pytz
