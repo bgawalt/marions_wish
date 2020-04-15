@@ -2,3 +2,4 @@ account_material/*
 *.db
 .DS_Store
 *.config
+__pycache__
