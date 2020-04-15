@@ -51,8 +51,6 @@ class Texter(Enum):
     # Error codes for describing non-dialogue script lines
     COMMENT = 4
     BLANK = 5
-    # TODO: consider dropping this one and just throwing exception instead.
-    UNKNOWN = 6
 
     def is_character(self):
         return self in {Texter.TIM, Texter.GREGG, Texter.MARK}
@@ -67,11 +65,15 @@ class Texter(Enum):
         spline = line.split(maxsplit=1)
         if len(spline) != 2:
             # This should never happen!
-            return (Texter.UNKNOWN, 'max_split fail! ' + line)
-        sender = {'Tim:': Texter.TIM,
-                  'Gregg:': Texter.GREGG,
-                  'Mark:': Texter.MARK}.get(spline[0], Texter.UNKNOWN)
-        return (sender, spline[1])
+            raise ValueError('Line split failed:', line[:70].strip())
+        sender_dict = {
+            'Tim:': Texter.TIM,
+            'Gregg:': Texter.GREGG,
+            'Mark:': Texter.MARK
+        }
+        if spline[0] not in sender_dict:
+            raise ValueError('Unrecognized sender in line:', line[:70].strip())
+        return (sender_dict[spline[0]], spline[1])
 
 
 def create_sender_oauths(config: Dict[Text, Text]) -> Dict[Texter, OAuth1]:
@@ -268,9 +270,6 @@ def main(argv):
         if text_msg.sender.is_character():
             next_id += 1
             msgs.append(text_msg)
-        if text_msg.sender == Texter.UNKNOWN:
-            print('UNKNOWN at line', line_num + 1, ":",
-                  line[:25].strip(), "...")
     print('Parse succeeded.')
 
     for msg in msgs:
