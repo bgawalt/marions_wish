@@ -191,61 +191,49 @@ class TweetEmitter(object):
 
     def __init__(self, config: Dict[Text, Text]):
         self._test_mode = config['TEST_MODE'] == 'True'
-        print('test mode', self._test_mode)
-        # How long to wait before letting the same account tweet again.
-        self._same_sender_delta = dt_timedelta(seconds=15)
-        # How logn to wait after posting no matter who's posting next.
-        self._post_delay_sec = 3 if self._test_mode else 20
+        print('Test mode' if self._test_mode else 'HEADS UP.  LIVE MODE.')
+        # Wait a short or long amount of time before tweeting, depending on if
+        # the tweet is a self-reply
+        self._same_sender_delay_sec = int(config['DELAY_SAME_SENDER_SEC'])
+        self._diff_sender_delay_sec = int(config['DELAY_DIFF_SENDER_SEC'])
 
-        # Last tweet added to the thread
+        # Last tweet added to the thread and its sender
         self._prev_tweet_id = None
+        self._prev_sender = None
 
-        now = _CALI_TZ.localize(dt_datetime.now())
-        # TODO: Ditch time locks, just sleep based on previous sender v current
-        self._sender_timelocks = {
-            Texter.TIM: now,
-            Texter.GREGG: now,
-            Texter.MARK: now
-        }
         self._sender_oauths = create_sender_oauths(config)
 
     def _wait(self, msg: TextMsg) -> None:
-        now = _CALI_TZ.localize(dt_datetime.now())
-        sender_timelock = self._sender_timelocks[msg.sender]
-        while now < sender_timelock:
-            time.sleep((sender_timelock - now).total_seconds())
-            now = _CALI_TZ.localize(dt_datetime.now())
+        # Wait different lengths based on whether it's a self-reply:
+        if msg.sender == self._prev_sender:
+            print('   Same sender delay')
+            time.sleep(self._same_sender_delay_sec)
+        else:
+            print('   Diff sender delay')
+            time.sleep(self._diff_sender_delay_sec)
+        # Wait for the message's timelock to expire
         now = _CALI_TZ.localize(dt_datetime.now())
         while now < msg.timelock:
             if not self._test_mode:
-                print('Sleep till', msg.timelock)
+                print('  Sleep till', msg.timelock)
                 time.sleep((msg.timelock - now).total_seconds())
                 now = _CALI_TZ.localize(dt_datetime.now())
             else:
-                print('Fake-sleeping for %d seconds' %
-                      ((msg.timelock - now).total_seconds(),))
+                print('  Fake Sleep till', msg.timelock)
                 time.sleep(3)
                 now = msg.timelock
 
     def post(self, msg: TextMsg) -> None:
         self._wait(msg)
-
-        # Apply timelock:
-        self._sender_timelocks[msg.sender] = (
-            _CALI_TZ.localize(dt_datetime.now()) + self._same_sender_delta)
-        time.sleep(self._post_delay_sec)
-
         def send_tweet(text: Optional[Text], media_id: Optional[Text]) -> Text:
             if text is None and media_id is None:
                 raise ValueError('Must supply text or media_id')
-            request_data = {}
+            request_data = {
+                'status': msg.contents
+            }
             if self._prev_tweet_id != None:
                 request_data['in_reply_to_status_id'] = self._prev_tweet_id
                 request_data['auto_populate_reply_metadata'] = True
-                request_data['status'] = msg.contents
-            else:
-                # TODO: Consider re-populating twitter @mentions
-                request_data['status'] = msg.contents
             req = requests.post(url=POST_TWEET_URL, data=request_data,
                                 auth=self._sender_oauths[msg.sender])
             self._prev_tweet_id = req.json().get('id_str', None)
@@ -256,6 +244,7 @@ class TweetEmitter(object):
             send_tweet(msg, None)
         else:
             print(msg.sender, msg.contents)
+        self._prev_sender = msg.sender
 
 
 def main(argv):
@@ -269,9 +258,10 @@ def main(argv):
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
     msgs = []
+    print('Beginning script parse')
     for line_num, line in enumerate(lines):
         if tk.update_lock(line):
-            print('New timelock:', tk.timelock)
+            print('New timelock, line', line_num + 1, ':', tk.timelock)
             # No need to try parsing this line as a message, it was timing info
             continue
         text_msg = TextMsg.from_line(line, next_id, tk.timelock)
@@ -281,6 +271,7 @@ def main(argv):
         if text_msg.sender == Texter.UNKNOWN:
             print('UNKNOWN at line', line_num + 1, ":",
                   line[:25].strip(), "...")
+    print('Parse succeeded.')
 
     for msg in msgs:
         emitter.post(msg)
