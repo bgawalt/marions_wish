@@ -22,6 +22,8 @@ from requests_oauthlib import OAuth1
 
 DELETE_ME = [
     (Texter.MARK, '1249944062288752640'),
+    (Texter.TIM, '1250304056012066819'),
+    (Texter.GREGG, '1250304073464557569')
 ]
 
 
