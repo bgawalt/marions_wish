@@ -96,3 +96,9 @@ pip install pytz
 pip install requests
 pip install requests-oauthlib
 ```
+
+## Future Work
+
+There's some hints in the code that these accounts are supposed to post the
+actual images and videos mentioned in the script.  I haven't gotten around to
+that, mostly because it don't seem worth it if I don't actually have copies.
