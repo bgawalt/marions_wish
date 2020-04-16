@@ -201,7 +201,8 @@ class TweetEmitter(object):
 
         # Last tweet added to the thread and its sender
         self._prev_tweet_id = None
-        self._prev_sender = None
+        # Tim starts the script
+        self._prev_sender = Texter.TIM
 
         self._sender_oauths = create_sender_oauths(config)
 
@@ -226,6 +227,8 @@ class TweetEmitter(object):
                 now = msg.timelock
 
     def post(self, msg: TextMsg) -> None:
+        print('Attempting msg', msg.id, ':',
+              '"', msg.contents[:20].strip(), '"')
         self._wait(msg)
         def send_tweet(text: Optional[Text], media_id: Optional[Text]) -> Text:
             if text is None and media_id is None:
@@ -261,7 +264,7 @@ def main(argv):
     # TweetEmitter will handle actually respecting the timelocks and pushing
     # the tweets to Twitter:
     emitter = TweetEmitter(config)
-    
+
     print('Initial timelock value:', tk.timelock)
     with open(script_filename, 'rt') as infile:
         lines = infile.readlines()
