@@ -109,7 +109,7 @@ class TextMsg(object):
         """
         self._id = id_
         self._sender = sender
-        self._contents = contents.strip()
+        self._contents = contents.strip().replace(' QQ ', '\n')
         self._is_img = is_img
         self._timelock = timelock
 
@@ -151,7 +151,7 @@ class TimeKeeper(object):
     """Track the time texts take place in the script."""
 
     def __init__(self, restrict: bool = True):
-        now = dt_datetime.now()
+        now = _CALI_TZ.localize(dt_datetime.now())
         if restrict and now.hour >= 19:
             raise RuntimeError("Can't run this job after 7 PM (Pacific)!!")
         self._day_0 = now.date()
@@ -200,7 +200,7 @@ class TweetEmitter(object):
         self._diff_sender_delay_sec = int(config['DELAY_DIFF_SENDER_SEC'])
 
         # Last tweet added to the thread and its sender
-        self._prev_tweet_id = None
+        self._prev_tweet_id = config.get('REPLY_TO_TWEET_ID', None)
         # Tim starts the script
         self._prev_sender = Texter.TIM
 
