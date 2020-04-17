@@ -97,8 +97,42 @@ pip install requests
 pip install requests-oauthlib
 ```
 
+## Notes on timing
+
+Here's a rundown of when big strings of texts start; the number of texts in each
+block; and for Day 0 blocks, the time since the start of the thread.
+
+| Time stamp      | Line | Time Elapsed | Num Tweets |
+|-----------------|------|--------------|------------|
+| Day 0, 7:52 PM  | 64   | --           | 8          |
+| Day 0, 8:08 PM  | 72   | 0h 16m       | 12         |
+| Day 0, 8:55 PM  | 76   | 1h 3m        | 15         |
+| Day 0, 10:01 PM | 79   | 2h 9m        | 21         |
+| Day 0, 10:06 PM | 85   | 2h 14m       | 58         |
+| Day 0, 10:20 PM | 122  | 2h 28m       | 81         |
+| Day 0, 10:48 PM | 145  | 2h 56m       | 163        |
+| --              | --   | --           | --         |
+| Day 1, 10:39 AM | 227  | --           | 182        |
+| Day 1, 10:41 PM | 409  | --           | 103        |
+| [the end]       | 512  | --           | --         |
+
+The Twitter API rates limit posts to 300 per 3 hours: 1.6 tweets per minute,
+or 36 seconds between each tweet.  I set delays of 30 seconds for
+replies-to-self (i.e., if the current sender matches the previous sender),
+and 60 seconds otherwise.  Much slower than an actual texting experience, but
+what are ya gonna do.
+
 ## Future Work
 
 There's some hints in the code that these accounts are supposed to post the
 actual images and videos mentioned in the script.  I haven't gotten around to
 that, mostly because it don't seem worth it if I don't actually have copies.
+
+I should also force a ~5 minute delay whenever a new timelock is reached, just
+to preserve the original spirit of "there was some dead air in the
+conversation."  Right now, that can get crowded out with rate-limit delays
+piling up.
+
+I'm also not great with timezones, which is not so big a risk factor.  But I
+should consider where and how `pytz.normalize` is appropriate with the datetime
+arithmetic used here.  Fun read: https://tommikaikkonen.github.io/timezones/
