@@ -15,6 +15,23 @@ This repo includes a text-file version of that script, whose special format is
 parsed into instructions on which account should tweet, or whether a long pause
 is in order.
 
+## Recitals
+
+This routine has been run live once.  A few bugs were uncovered in production:
+
+1.  Twitter, the platform, was pretty suspicious of Mark and
+    suspended/restricted the account after its first attempted posting.  This
+    split what was supposed to be a single thread into two -- when Gregg started
+    a new thread when Mark's failed to go through.  (I don't know why I assumed
+    a failed posting would throw an exception; it did not, so the script just
+    marched on while I scrambled to reactivate Mark.)
+2.  I forgot to parse `' QQ '` back into carriage returns.  Luckily I spotted
+    this before `' QQ '` made air, but it meant pausing the original run and
+    then resuming -- hence the six minute delay between
+    [this tweet](https://twitter.com/Mark_mwish/status/1251032291557519361) and
+    the Gregg tweet it's replying to.  Just a convenient stopping place to swap
+    in the correct code.
+
 ## Tweetable "Marion's Wish" Script
 
 The text file of the script parses lines of the following format:
@@ -136,3 +153,7 @@ piling up.
 I'm also not great with timezones, which is not so big a risk factor.  But I
 should consider where and how `pytz.normalize` is appropriate with the datetime
 arithmetic used here.  Fun read: https://tommikaikkonen.github.io/timezones/
+
+Also: There's a naive-vs-aware datetime comparison somewhere in the code!
+It goes away if you always include an explicit timelock line before any lines of
+dialogue.
